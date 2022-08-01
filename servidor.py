@@ -30,6 +30,13 @@ def serve(ip):
         conn, addr = server_socket.accept()
         req = conn.recv(2048).decode()
         print(req)
+        get("Hello, world!", conn)
+        close(server_socket)
+
+# Requests a GET for a text
+def get(message, conn):
+    request = 'HTTP/1.0 200 OK \n\n' + message
+    conn.sendall(request.encode())
 
 # Closes a socket.
 def close(socket):
