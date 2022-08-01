@@ -1,5 +1,3 @@
-# usage: python3 servidor.py -b ip_addr
-
 import argparse
 from ast import arg
 from email import parser
@@ -11,7 +9,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-b')
     arguments = parser.parse_args()
-    print(arguments)
+    print(arguments.b)
 
 if __name__ == '__main__':
     main()
