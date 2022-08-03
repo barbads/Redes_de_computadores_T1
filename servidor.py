@@ -23,7 +23,7 @@ class Handler:
 
     # Requests a GET for the index
     def get_index(self, html_file_name, conn):
-        html = open("index.html")
+        html = open(html_file_name)
         content = html.read()
         request = 'HTTP/1.0 200 OK \n\n' + content
         conn.sendall(request.encode())
