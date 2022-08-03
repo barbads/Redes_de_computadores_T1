@@ -7,36 +7,47 @@ import sys
 from http.server import *
 import socket
 
+from requests import request
+
 
 # Classe handler
-class Handler(BaseHTTPRequestHandler): 
+class Handler: 
     def post(self):
         pass
 
-    def header():
+    def header(self):
         pass
+
+    def get(self):
+        pass
+
+    # Requests a GET for the index
+    def get_index(self, html_file_name, conn):
+        html = open("index.html")
+        content = html.read()
+        request = 'HTTP/1.0 200 OK \n\n' + content
+        conn.sendall(request.encode())
+        html.close()
 
 # Opens a socket for listening.
 def serve(ip):
     SERVER_HOST = ip
-    SERVER_PORT = 9999 #Porta escolhida
-    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    SERVER_PORT = 9999 # Porta escolhida
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # AF_INET - IPv4; SOCK_STREAM - TCP
     server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     server_socket.bind((SERVER_HOST, SERVER_PORT))
     server_socket.listen(1)
     print('Listening on port %s ...' %SERVER_PORT)
 
+    handler = Handler()
+
     while True:
         conn, addr = server_socket.accept()
         req = conn.recv(2048).decode()
         print(req)
-        get("Hello, world!", conn)
+        handler.get_index("index.html", conn)
         close(server_socket)
 
-# Requests a GET for a text
-def get(message, conn):
-    request = 'HTTP/1.0 200 OK \n\n' + message
-    conn.sendall(request.encode())
 
 # Closes a socket.
 def close(socket):
