@@ -24,7 +24,7 @@ def serve(ip):
     server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     server_socket.bind((SERVER_HOST, SERVER_PORT))
     server_socket.listen(1)
-    print('Listening on port %s ...' % SERVER_PORT)
+    print('Listening on port %s ...' %SERVER_PORT)
 
     while True:
         conn, addr = server_socket.accept()
@@ -47,7 +47,7 @@ def main():
     parser.add_argument('-b')
     arguments = parser.parse_args()
     addr = arguments.b
-    print(addr)
+    print("ip: " + addr)
 
     serve(addr)
 
