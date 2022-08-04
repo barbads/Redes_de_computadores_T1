@@ -16,28 +16,38 @@ class Handler:
         self.headers = ""
         self.html_file = ""
         
-    def parseHeader(self, conn, req):
+    def parseHeader(self, req):
         # Transforma a requisicao vinda do browser em uma LISTA DE STRINGS.
         self.headers = req.split('\n')
+        print(self.html_file)
 
         # O Primeiro elemento da lista eh exatamente a requisicao GET, no formato especificado
         # na RFC de HTTP. 
-        self.html_file = self.headers[0].split(" ")[1].replace('\\', '')
+        self.html_file = self.headers[0].split(" ")[1]
 
     def post(self):
         pass
 
-    def header(self):
-        pass
+    def removebar(self, file):
+        self.html_file = file.replace('/', '')
 
     def get(self, conn):
-        pass
+        html = open(self.html_file)
+        content = html.read()
+
+        #Resposta da requisicao
+        request = 'HTTP/1.0 200 OK \n\n' + content
+        print(request.encode())
+        conn.sendall(request.encode())
+
+        html.close()
 
     # Requests a GET for the index
     def get_index(self, html_file_name, conn):
         html = open(html_file_name)
         content = html.read()
         request = 'HTTP/1.0 200 OK \n\n' + content
+        print(request.encode())
         conn.sendall(request.encode())
         html.close()
 
@@ -56,18 +66,19 @@ def serve(ip):
     while True:
         conn, addr = server_socket.accept()
         req = conn.recv(2048).decode()
-        print(req)
 
-        handler.parseHeader(conn, req)
+        handler.parseHeader(req)
 
-        print(handler.html_file)
-        
-        handler.get_index("index.html", conn)
+        # Caso seja uma requisicao para a pagina
+        # inicial.
+        if (handler.html_file == '/'):        
+            handler.get_index("index.html", conn)
+        else:
+            handler.removebar(handler.html_file)
+            handler.get(conn)
 
         close(server_socket)
 
-
-# Closes a socket.
 def close(socket):
     socket.close
 
