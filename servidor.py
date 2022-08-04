@@ -11,14 +11,26 @@ from requests import request
 
 
 # Classe handler
-class Handler: 
+class Handler:
+    def __init__(self):
+        self.headers = ""
+        self.html_file = ""
+        
+    def parseHeader(self, conn, req):
+        # Transforma a requisicao vinda do browser em uma LISTA DE STRINGS.
+        self.headers = req.split('\n')
+
+        # O Primeiro elemento da lista eh exatamente a requisicao GET, no formato especificado
+        # na RFC de HTTP. 
+        self.html_file = self.headers[0].split(" ")[1].replace('\\', '')
+
     def post(self):
         pass
 
     def header(self):
         pass
 
-    def get(self):
+    def get(self, conn):
         pass
 
     # Requests a GET for the index
@@ -45,7 +57,13 @@ def serve(ip):
         conn, addr = server_socket.accept()
         req = conn.recv(2048).decode()
         print(req)
+
+        handler.parseHeader(conn, req)
+
+        print(handler.html_file)
+        
         handler.get_index("index.html", conn)
+
         close(server_socket)
 
 
